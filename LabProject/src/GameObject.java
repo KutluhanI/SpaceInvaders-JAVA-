@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public abstract class GameObject {
 
     protected int x;
@@ -16,4 +18,5 @@ public abstract class GameObject {
     public void setDead(boolean a) {
         this.dead = a;
     }
+    public abstract Rectangle getBoundingBox();
 }

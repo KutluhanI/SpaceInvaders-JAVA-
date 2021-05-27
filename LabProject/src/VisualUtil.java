@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -14,6 +15,8 @@ public class VisualUtil {
     public static final BufferedImage alien = readImage("alien.png");
     public static final BufferedImage barricade1 = readImage("barricade1.png");
     public static final BufferedImage barricade2 = readImage("barricade2.png");
+    public static final BufferedImage barricade3 = readImage("barricade3.png");
+    public static final BufferedImage sAlien = readImage("strongAlien.png");
     public static final BufferedImage powerup = readImage("powerup.png");
 
     private static BufferedImage readImage(String fileName) {

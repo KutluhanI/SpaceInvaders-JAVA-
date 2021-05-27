@@ -2,9 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class MoveMe {
+public class MovePlayer {
 
-    public MoveMe() {
+    public MovePlayer() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +89,7 @@ public class MoveMe {
     }
 
 
-    public class XDirectionAction extends AbstractAction {
+    public static class XDirectionAction extends AbstractAction {
 
         private final MovementState movementState;
         private final int value;

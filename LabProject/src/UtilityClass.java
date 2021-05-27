@@ -6,10 +6,9 @@ public class UtilityClass {
 
     public static Human human;
     public static Alien aliens[];
-    //public static MapGenerator map;
     public static ArrayList<Bullet> Bullets;
     public static Barricade barricades[];
-    //public static StrongAlien strongAlien;
+    public static StrongAlien sAliens[];
 
     public static final int alienRows = 5;
     public static final int alienColumns = 11;

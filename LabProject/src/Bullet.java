@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Bullet extends GameObject{
     private int ySpeed;
     private int xSpeed;
@@ -13,5 +15,10 @@ public class Bullet extends GameObject{
     }
     public void xmovement() {
         this.x += xSpeed;
+    }
+
+    @Override
+    public Rectangle getBoundingBox() {
+        return null;
     }
 }
