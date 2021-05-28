@@ -4,10 +4,11 @@ public class Bullet extends GameObject{
     private int ySpeed;
     private int xSpeed;
 
-    public Bullet (int x, int y, int ySpeed) {
+    public Bullet (int x, int y, int ySpeed, int xSpeed) {
         this.x=x;
         this.y=y;
         this.ySpeed=ySpeed;
+        this.xSpeed=xSpeed;
     }
 
     public void ymovement() {
@@ -20,5 +21,13 @@ public class Bullet extends GameObject{
     @Override
     public Rectangle getBoundingBox() {
         return null;
+    }
+
+    public int getySpeed() {
+        return ySpeed;
+    }
+
+    public int getxSpeed () {
+        return xSpeed;
     }
 }

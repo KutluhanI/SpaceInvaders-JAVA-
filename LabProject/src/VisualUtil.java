@@ -16,8 +16,9 @@ public class VisualUtil {
     public static final BufferedImage barricade1 = readImage("barricade1.png");
     public static final BufferedImage barricade2 = readImage("barricade2.png");
     public static final BufferedImage barricade3 = readImage("barricade3.png");
-    public static final BufferedImage sAlien = readImage("strongAlien.png");
+    public static final BufferedImage sAlien = readImage("sAlien.png");
     public static final BufferedImage powerup = readImage("powerup.png");
+    public static final BufferedImage bullet = readImage("bullet.png");
 
     private static BufferedImage readImage(String fileName) {
         System.out.println("[ResourceManager]: Loading "+fileName);
@@ -39,7 +40,7 @@ public class VisualUtil {
         try {
             reader = new BufferedReader(new FileReader(path + "highscore.txt"));
         } catch (FileNotFoundException e1) {
-            System.out.println("[ResourceManager]: File highscores.txt not found");
+            System.out.println("[ResourceManager]: File highscore.txt not found");
         }
 
         try {
@@ -61,7 +62,7 @@ public class VisualUtil {
         try {
             writer = new PrintWriter(new File(path + "highscore.txt"));
         } catch (FileNotFoundException e) {
-            System.out.println("[ResourceManager]: File highscores.txt not found");
+            System.out.println("[ResourceManager]: File highscore.txt not found");
         }
 
         for(int i=0; i<UtilityClass.highscores.length; i++) {

@@ -25,7 +25,7 @@ public class Human extends GameObject{
         return height;
     }
 
-    public int getWidht() {
+    public int getWidth() {
         return widht;
     }
 
@@ -66,14 +66,6 @@ public class Human extends GameObject{
 
         public boolean a;
 
-        public boolean getA(){
-            return a;
-        }
-
-        public int getAngle(){
-            return Angle;
-        }
-
         public isMoving (boolean a) {
             this.a = a;
         }
@@ -86,6 +78,8 @@ public class Human extends GameObject{
                 Angle = 0;
             }
         }
-
+    }
+    public int getAngle(){
+        return Angle;
     }
 }

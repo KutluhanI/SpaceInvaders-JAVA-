@@ -2,9 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class MovePlayer {
+public class MoveMe {
 
-    public MovePlayer() {
+    public MoveMe() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

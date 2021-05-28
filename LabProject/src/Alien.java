@@ -28,6 +28,10 @@ public class Alien extends GameObject{
         return xSpeed;
     }
 
+    public void changexSpeed() {
+        xSpeed = -xSpeed;
+    }
+
     public static void changeFrame() {
         if(frame == 0)
             frame = 1;

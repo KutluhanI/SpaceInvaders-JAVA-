@@ -8,35 +8,31 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class GameBoard extends JPanel implements ActionListener, KeyListener{
+public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
     public static int level = 1;
 
     private GameState state;
-    private Timer timer;
-    private int timerDelay = 20;
-
-    private int playerDeathDelay = 200;
+    private final Timer timer;
+    private final int timerDelay = 20;
 
     private static int score = 0;
     private static int aliensKilled = 0;
 
-    /**Creates GameBoard*/
     public GameBoard() {
         this.setFocusable(true);
+        this.requestFocus();
 
         //init player
         UtilityClass.human = new Human();
 
         //init alien    s
-        GameTasks.initAliens();
+        GameTasks.spawnAliens();
 
         //init Bullets list
         UtilityClass.Bullets = new ArrayList<Bullet>();
 
         //init barricades
-
-
         if(level == 1) {
             UtilityClass.barricades = new Barricade[] {
                     new Barricade(70, 400, Barricade.Type.barricade1),
@@ -117,44 +113,42 @@ public class GameBoard extends JPanel implements ActionListener, KeyListener{
             am.put("right-released", new Human.XDirectionAction(0));
             am.put("right-released", new Human.isMoving(false));
 
-            Timer timer = new Timer(1, new ActionListener() {
+            Timer timer1 = new Timer(1, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     a.x += a.getxSpeed();
                     if (a.x < 0) {
                         a.x = 0;
-                    } else if (a.x + a.getWidht() > getWidth()) {
-                        a.x = getWidth() - a.getWidht();
+                    } else if (a.x + a.getWidth() > getWidth()) {
+                        a.x = getWidth() - a.getWidth();
                     }
                     repaint();
                 }
             });
-            timer.start();
+            timer1.start();
         }
     }
 
 	@Override
-	public void keyPressed(KeyEvent arg0) {
-
+	public void keyPressed(KeyEvent e) {
+        System.out.println("i got here 1");
 		if(state == GameState.RUNNING) {
 		    MovePlayer user = new MovePlayer(UtilityClass.human);
-            if (arg0.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 if(GameTasks.getPlayerDelay() > UtilityClass.human.getShootingDelay() || UtilityClass.human.hasSuperShot()) {
-                    UtilityClass.Bullets.add(new Bullet(UtilityClass.human.getX()+19, UtilityClass.human.getY()-10, -10));
+                    UtilityClass.Bullets.add(new Bullet(UtilityClass.human.getX()+19, UtilityClass.human.getY()-10, -10, -5));
                     GameTasks.resetPlayerDelay();
                 }
-        }
+            }
 		}
 		else if(state == GameState.MAIN_MENU) {
-			switch(arg0.getKeyCode()) {
-			case KeyEvent.VK_ENTER:
-				state = GameState.RUNNING;
-				break;
-
-			case KeyEvent.VK_SPACE:
-				state = GameState.HIGHSCORES;
-				break;
-			}
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_ENTER -> state = GameState.RUNNING;
+                case KeyEvent.VK_SPACE -> state = GameState.HIGHSCORES;
+            }
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                System.out.println("i got here2");
+            }
 		}
 		else if(state == GameState.GAME_OVER) {
 			state = GameState.MAIN_MENU;
@@ -177,7 +171,9 @@ public class GameBoard extends JPanel implements ActionListener, KeyListener{
     public void keyReleased(KeyEvent arg0) {}
 
     @Override
-    public void keyTyped(KeyEvent arg0) {}
+    public void keyTyped(KeyEvent arg0) {
+        System.out.println("i got here 3");
+    }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
@@ -191,45 +187,26 @@ public class GameBoard extends JPanel implements ActionListener, KeyListener{
                 //Moves all aliens
                 GameTasks.moveAllAliens();
 
-                //Makes aliens shoot
-                GameTasks.alienShoot();
-
                 //Moves Bullets
-                GameTasks.movePrjs();
+                GameTasks.moveBullets();
 
                 //Checks collision
-                if(GameTasks.checkCollisionAlienPrj()) {
+                if(GameTasks.collisionAlienBullet()) {
                     aliensKilled++;
                 }
 
-                GameTasks.checkCollisionShieldPrj();
+                GameTasks.collisionBarricadeBullet();
 
-                //If player is shot
-                if(GameTasks.checkCollisionPlayerPrj()) {
-                    System.out.println("[GameBoard]: Detected player death");
-                    UtilityClass.player.setDead(true);
-                }
-
-                //Checks if the aliens have landed on the planet
-                if(GameTasks.checkAliensLanded())
-                    state = GameState.GAME_OVER;
-
-                //Creates the red ship on the screen
-                GameTasks.strongAlienFlight();
-
-                //Checks collision with red ship
-                GameTasks.checkCollisionstrongAlienPrj();
             }
 
             //Count how many aliens has the player killed
-            if(aliensKilled == UtilityClass.alienColumns*UtilityClass.alienRows) {
+            if(aliensKilled == GameTasks.alienCount+GameTasks.sAlienCount) {
                 aliensKilled = 0;
-                GameTasks.initAliens();
-                Alien.decreaseMotionDelay();
-                UtilityClass.human.addLife();
+                GameTasks.spawnAliens();
             }
         }
-        repaint(); revalidate();
+        repaint();
+        revalidate();
     }
 //
 //	@Override
@@ -259,16 +236,38 @@ public class GameBoard extends JPanel implements ActionListener, KeyListener{
         //draws Bullets
         g.setColor(Color.WHITE);
         for(int i=0; i<UtilityClass.Bullets.size(); i++) {
-            g.fillRect(UtilityClass.Bullets.get(i).getX(), UtilityClass.Bullets.get(i).getY(), 2, 10);
+            g.drawImage(VisualUtil.bullet , UtilityClass.Bullets.get(i).getX(), UtilityClass.Bullets.get(i).getY(),
+                    VisualUtil.bullet.getWidth(), VisualUtil.bullet.getHeight(), null);
         }
 
-        //draw aliens TODO
+        for (int i=0; i<UtilityClass.barricades.length; i++) {
+            if (UtilityClass.barricades[i].getType() == Barricade.Type.barricade1) {
+                g.drawImage(VisualUtil.barricade1, UtilityClass.barricades[i].getX(), UtilityClass.barricades[i].getY(),
+                        VisualUtil.barricade1.getWidth(), VisualUtil.barricade1.getHeight(), null);
+            }
+            if (UtilityClass.barricades[i].getType() == Barricade.Type.barricade2) {
+                g.drawImage(VisualUtil.barricade2, UtilityClass.barricades[i].getX(), UtilityClass.barricades[i].getY(),
+                        VisualUtil.barricade2.getWidth(), VisualUtil.barricade2.getHeight(), null);
+            }
+            if (UtilityClass.barricades[i].getType() == Barricade.Type.barricade3) {
+                g.drawImage(VisualUtil.barricade3, UtilityClass.barricades[i].getX(), UtilityClass.barricades[i].getY(),
+                        VisualUtil.barricade3.getWidth(), VisualUtil.barricade3.getHeight(), null);
+            }
+        }
 
+        //draw aliens
+        for (int i=0; i<UtilityClass.aliens.length; i++) {
+            if (UtilityClass.aliens[i] != null) {
+                g.drawImage(VisualUtil.alien, UtilityClass.aliens[i].getX(), UtilityClass.aliens[i].getY(),
+                        VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
+            }
+        }
 
         //draw red ship
         for (int i=0; i< UtilityClass.sAliens.length; i++) {
             if (UtilityClass.sAliens[i] != null)
-                g.drawImage(VisualUtil.sAlien, UtilityClass.sAliens[i].getX(), UtilityClass.sAliens[i].getY(), VisualUtil.sAlien.getWidth() * 3, VisualUtil.sAlien.getHeight() * 3, null);
+                g.drawImage(VisualUtil.sAlien, UtilityClass.sAliens[i].getX(), UtilityClass.sAliens[i].getY(),
+                        VisualUtil.sAlien.getWidth(), VisualUtil.sAlien.getHeight(), null);
         }
     }
 
