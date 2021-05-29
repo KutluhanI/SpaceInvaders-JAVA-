@@ -4,7 +4,11 @@ public class StrongAlien extends GameObject{
     public static int xSpeed = 10;
     public int hp = 2;
     private static final int height = 100;
-    private static final int widht = 100;
+    private static final int width = 100;
+
+    public StrongAlien(){
+        this.dead = true;
+    }
 
     public StrongAlien (int x, int y) {
         this.x = x;
@@ -27,6 +31,10 @@ public class StrongAlien extends GameObject{
         return hp;
     }
 
+    public void changexSpeed() {
+        xSpeed = -xSpeed;
+    }
+
     public void getDamage() {
         this.hp -=1 ;
         if (hp == 0) {
@@ -37,16 +45,12 @@ public class StrongAlien extends GameObject{
         return xSpeed;
     }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidht() {
-        return widht;
+    public int getWidth() {
+        return width;
     }
 
     @Override
     public Rectangle getBoundingBox() {
-        return new Rectangle(VisualUtil.alien.getWidth(),VisualUtil.alien.getHeight());
+        return new Rectangle(x, y, VisualUtil.sAlien.getWidth(),VisualUtil.sAlien.getHeight());
     }
 }

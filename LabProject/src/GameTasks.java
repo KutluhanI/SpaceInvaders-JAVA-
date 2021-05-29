@@ -10,17 +10,13 @@ public class GameTasks {
 
     public static int alienCount;
     public static int sAlienCount;
-    private static int alienTimeDelay = 0;
     private static int playerTimeDelay = 0;
     private static int superShotDelay = 0;
 
     public static void changeDelays() {
-        alienTimeDelay++;
         playerTimeDelay++;
         if(UtilityClass.human.hasSuperShot()) superShotDelay++;
     }
-
-    public static int getAlienDelay() {return alienTimeDelay;}
 
     public static int getPlayerDelay() {return playerTimeDelay;}
 
@@ -30,76 +26,86 @@ public class GameTasks {
         return superShotDelay;
     }
 
-    public static void spawnAliens() {
+    public static void spawnAliens(boolean inGame, int level) {
 
-        switch (GameBoard.level) {
-            case 1 -> {
-                alienCount = 4;
-                sAlienCount = 0;
+        if (!inGame) {
+            switch (level) {
+                case 1 -> {
+                    alienCount = 4;
+                    sAlienCount = 0;
+                }
+                case 2 -> {
+                    alienCount = 6;
+                    sAlienCount = 1;
+                }
+                case 3 -> {
+                    alienCount = 8;
+                    sAlienCount = 3;
+                }
             }
-            case 2 -> {
-                alienCount = 6;
-                sAlienCount = 1;
+            UtilityClass.aliens = new Alien[alienCount];
+            UtilityClass.sAliens = new StrongAlien[sAlienCount];
+        }
+
+        if (!GameBoard.isFirst) {
+            for (int i = 0; i < sAlienCount; i++) {
+                UtilityClass.sAliens[i] = new StrongAlien(i * 200, 1);
             }
-            case 3 -> {
-                alienCount = 8;
-                sAlienCount = 3;
+            for (int i = 0; i < alienCount; i++) {
+                UtilityClass.aliens[i] = new Alien(15 + (i * 100), 1);
+            }
+            GameBoard.isFirst = true;
+        }
+        else {
+            for (int i = 0; i < sAlienCount; i++) {
+                if (!UtilityClass.sAliens[i].isDead()) {
+                    int x,y;
+                    x = UtilityClass.sAliens[i].x;
+                    y = UtilityClass.sAliens[i].y;
+                    UtilityClass.sAliens[i] = new StrongAlien(x, y);
+                }
+                else {
+                    UtilityClass.sAliens[i] = new StrongAlien();
+                }
+            }
+            for (int i = 0; i < alienCount; i++) {
+                if (!UtilityClass.aliens[i].isDead()) {
+                    int x,y;
+                    x = UtilityClass.aliens[i].x;
+                    y = UtilityClass.aliens[i].y;
+                    UtilityClass.aliens[i] = new Alien(x, y);
+                }
+                else {
+                    UtilityClass.aliens[i] = new Alien();
+                }
             }
         }
-
-        UtilityClass.aliens = new Alien[alienCount+sAlienCount];
-
-        if (GameBoard.level == 1) {
-
-            //TODO Change initial values
-            UtilityClass.aliens[0]= new Alien(1,1);
-            UtilityClass.aliens[1]= new Alien(1,1);
-            UtilityClass.aliens[2]= new Alien(1,1);
-            UtilityClass.aliens[3]= new Alien(1,1);
-
-        }
-        else if(GameBoard.level == 2) {
-
-            UtilityClass.sAliens[0] = new StrongAlien(1,1);
-
-            UtilityClass.aliens[0]= new Alien(1,1);
-            UtilityClass.aliens[1]= new Alien(1,1);
-            UtilityClass.aliens[2]= new Alien(1,1);
-            UtilityClass.aliens[3]= new Alien(1,1);
-            UtilityClass.aliens[4]= new Alien(1,1);
-            UtilityClass.aliens[5]= new Alien(1,1);
-
-
-        }
-        else if(GameBoard.level == 3) {
-
-            UtilityClass.aliens[0]= new Alien(1,1);
-            UtilityClass.aliens[1]= new Alien(1,1);
-            UtilityClass.aliens[2]= new Alien(1,1);
-            UtilityClass.aliens[3]= new Alien(1,1);
-            UtilityClass.aliens[4]= new Alien(1,1);
-            UtilityClass.aliens[5]= new Alien(1,1);
-            UtilityClass.aliens[6]= new Alien(1,1);
-            UtilityClass.aliens[7]= new Alien(1,1);
-
-            UtilityClass.sAliens[0]= new StrongAlien(1,1);
-            UtilityClass.sAliens[1]= new StrongAlien(1,1);
-            UtilityClass.sAliens[2]= new StrongAlien(1,1);
-
-        }
-
     }
 
     public static void moveAllAliens() {
-        Timer timer = new Timer(4, Main.board); {
+        Timer timer = new Timer(5, Main.board); {
             for (int i=0; i < alienCount; i++) {
-                UtilityClass.aliens[i].x += UtilityClass.aliens[i].getxSpeed();
-                if (UtilityClass.aliens[i].x < 0) {
-                    UtilityClass.aliens[i].x = 0;
-                    UtilityClass.aliens[i].changexSpeed();
-                } else if (UtilityClass.aliens[i].x + UtilityClass.aliens[i].getWidth() > 1100) {
-                    UtilityClass.aliens[i].x = 1100 - UtilityClass.aliens[i].getWidth();
-                    UtilityClass.aliens[i].changexSpeed();
+                if (!UtilityClass.aliens[i].isDead()) {
+                    UtilityClass.aliens[i].x += UtilityClass.aliens[i].getxSpeed();
+                    if (UtilityClass.aliens[i].x < 0) {
+                        UtilityClass.aliens[i].x = 0;
+                        UtilityClass.aliens[i].changexSpeed();
+                    } else if (UtilityClass.aliens[i].x + UtilityClass.aliens[i].getWidth() > 1100) {
+                        UtilityClass.aliens[i].x = 1100 - UtilityClass.aliens[i].getWidth();
+                        UtilityClass.aliens[i].changexSpeed();
+                    }
+                }
+            }
+            for (int i=0; i < sAlienCount; i++) {
+                if (!UtilityClass.sAliens[i].isDead()) {
+                    UtilityClass.sAliens[i].x += UtilityClass.sAliens[i].getxSpeed();
+                    if (UtilityClass.sAliens[i].x < 0) {
+                        UtilityClass.sAliens[i].x = 0;
+                        UtilityClass.sAliens[i].changexSpeed();
+                    } else if (UtilityClass.sAliens[i].x + UtilityClass.sAliens[i].getWidth() > 1100) {
+                        UtilityClass.sAliens[i].x = 1100 - UtilityClass.sAliens[i].getWidth();
+                        UtilityClass.sAliens[i].changexSpeed();
+                    }
                 }
             }
         }
@@ -107,7 +113,7 @@ public class GameTasks {
     }
 
     public static void moveBullets() {
-        Timer timer = new Timer(5, Main.board);
+        Timer timer = new Timer(4, Main.board);
         {
             if (UtilityClass.human.getAngle() == 0) {
                 for (int i = 0; i < UtilityClass.Bullets.size(); i++) {
@@ -129,7 +135,6 @@ public class GameTasks {
             for(int k=0; k<UtilityClass.Bullets.size(); k++) {
                 if(UtilityClass.Bullets.get(k).getBoundingBox().intersects(UtilityClass.aliens[j].getBoundingBox()) && !UtilityClass.aliens[j].isDead()) {
                     UtilityClass.aliens[j].setDead(true);
-                    alienCount--;
                     UtilityClass.Bullets.remove(k);
                     return true;
                 }
@@ -140,7 +145,6 @@ public class GameTasks {
             for(int k=0; k<UtilityClass.Bullets.size(); k++) {
                 if(UtilityClass.Bullets.get(k).getBoundingBox().intersects(UtilityClass.sAliens[j].getBoundingBox()) && !UtilityClass.sAliens[j].isDead()) {
                     UtilityClass.sAliens[j].setDead(true);
-                    sAlienCount--;
                     UtilityClass.Bullets.remove(k);
                     return true;
                 }

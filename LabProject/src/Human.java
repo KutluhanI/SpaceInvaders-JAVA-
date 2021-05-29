@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 public class Human extends GameObject{
 
     public static int shootingDelay = 40;
-    private static final int xSpeed = 5;
+    private static int xSpeed = 0;
     private boolean superShot;
     private static final int height = 100;
     private static final int widht = 100;
@@ -13,7 +13,7 @@ public class Human extends GameObject{
 
     public Human () {
         x = 475;
-        y = 680;
+        y = 500;
         superShot = false;
     }
 
@@ -47,30 +47,17 @@ public class Human extends GameObject{
 
     public static class XDirectionAction extends AbstractAction {
 
-        private final int value;
-
-        public int getValue() {
-            return value;
-        }
-
-        public XDirectionAction(int value) {
-            this.value = value;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        }
-
-    }
-    public static class isMoving extends AbstractAction {
-
+        public int value;
         public boolean a;
 
-        public isMoving (boolean a) {
+        public XDirectionAction(int value1, boolean a) {
+            this.value = value1;
             this.a = a;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
+            xSpeed = value;
             if (a) {
                 Angle = 30;
             }
@@ -78,6 +65,7 @@ public class Human extends GameObject{
                 Angle = 0;
             }
         }
+
     }
     public int getAngle(){
         return Angle;

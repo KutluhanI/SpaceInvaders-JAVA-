@@ -7,7 +7,7 @@ import java.nio.file.Path;
 
 public class VisualUtil {
 
-    private static final Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
+    private static final Path path = FileSystems.getDefault().getPath("0").toAbsolutePath();
     private static BufferedReader reader;
     private static PrintWriter writer;
 

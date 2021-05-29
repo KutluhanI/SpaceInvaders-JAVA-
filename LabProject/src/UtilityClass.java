@@ -10,5 +10,6 @@ public class UtilityClass {
     public static Barricade barricades[];
     public static StrongAlien sAliens[];
 
+
     public static int[] highscores = VisualUtil.readHighscores();
 }

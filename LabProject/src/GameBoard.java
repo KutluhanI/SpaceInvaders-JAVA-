@@ -11,15 +11,18 @@ import javax.swing.*;
 public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
     public static int level = 1;
+    public static boolean isFirst = false;
 
     private GameState state;
     private final Timer timer;
-    private final int timerDelay = 20;
+    private final int timerDelay = 100;
+    public static int timeCounter = 0;
 
     private static int score = 0;
     private static int aliensKilled = 0;
 
     public GameBoard() {
+        addKeyListener(this);
         this.setFocusable(true);
         this.requestFocus();
 
@@ -27,7 +30,7 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
         UtilityClass.human = new Human();
 
         //init alien    s
-        GameTasks.spawnAliens();
+        GameTasks.spawnAliens(false, level);
 
         //init Bullets list
         UtilityClass.Bullets = new ArrayList<Bullet>();
@@ -91,49 +94,41 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
     public static void addScore(int value) {score+=value;}
 
+    public void MovePlayer(Human a) {
 
-    public static class MovePlayer extends JPanel {
+        InputMap im = getInputMap();
+        ActionMap am = getActionMap();
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left-pressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "left-released");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right-pressed");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "right-released");
 
-        public MovePlayer(Human a) {
+        am.put("left-pressed", new Human.XDirectionAction(-5, true));
+        am.put("left-released", new Human.XDirectionAction(0, false));
+        am.put("right-pressed", new Human.XDirectionAction(5, true));
+        am.put("right-released", new Human.XDirectionAction(0, false));
 
-            InputMap im = getInputMap();
-            ActionMap am = getActionMap();
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), "left-pressed");
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "left-released");
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), "right-pressed");
-            im.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "right-released");
+        Timer timer = new Timer(1, Main.board); {
+            a.x += a.getxSpeed();
+                if(a.x< 0)
 
-            boolean isMoving1 = false;
-            am.put("left-pressed", new Human.XDirectionAction(-5));
-            am.put("left-pressed", new Human.isMoving(true));
-            am.put("left-released", new Human.XDirectionAction(0));
-            am.put("left-released", new Human.isMoving(false));
-            am.put("right-pressed", new Human.XDirectionAction(5));
-            am.put("right-pressed", new Human.isMoving(true));
-            am.put("right-released", new Human.XDirectionAction(0));
-            am.put("right-released", new Human.isMoving(false));
+            {
+                a.x = 0;
+            } else if(a.x +a.getWidth()>
 
-            Timer timer1 = new Timer(1, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    a.x += a.getxSpeed();
-                    if (a.x < 0) {
-                        a.x = 0;
-                    } else if (a.x + a.getWidth() > getWidth()) {
-                        a.x = getWidth() - a.getWidth();
-                    }
-                    repaint();
-                }
-            });
-            timer1.start();
+            getWidth())
+
+            {
+                a.x = getWidth() - a.getWidth();
+            }
         }
+        timer.start();
     }
+
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-        System.out.println("i got here 1");
 		if(state == GameState.RUNNING) {
-		    MovePlayer user = new MovePlayer(UtilityClass.human);
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 if(GameTasks.getPlayerDelay() > UtilityClass.human.getShootingDelay() || UtilityClass.human.hasSuperShot()) {
                     UtilityClass.Bullets.add(new Bullet(UtilityClass.human.getX()+19, UtilityClass.human.getY()-10, -10, -5));
@@ -145,9 +140,6 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_ENTER -> state = GameState.RUNNING;
                 case KeyEvent.VK_SPACE -> state = GameState.HIGHSCORES;
-            }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                System.out.println("i got here2");
             }
 		}
 		else if(state == GameState.GAME_OVER) {
@@ -171,9 +163,7 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
     public void keyReleased(KeyEvent arg0) {}
 
     @Override
-    public void keyTyped(KeyEvent arg0) {
-        System.out.println("i got here 3");
-    }
+    public void keyTyped(KeyEvent arg0) {}
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
@@ -183,6 +173,8 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
             if(!UtilityClass.human.isDead()) {
                 //Changes delays
                 GameTasks.changeDelays();
+
+                MovePlayer(UtilityClass.human);
 
                 //Moves all aliens
                 GameTasks.moveAllAliens();
@@ -202,18 +194,15 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
             //Count how many aliens has the player killed
             if(aliensKilled == GameTasks.alienCount+GameTasks.sAlienCount) {
                 aliensKilled = 0;
-                GameTasks.spawnAliens();
+                level++;
+                isFirst = false;
+                GameTasks.spawnAliens(false, level);
             }
         }
+        timeCounter += timerDelay;
         repaint();
         revalidate();
     }
-//
-//	@Override
-//	public void keyReleased(KeyEvent arg0) {}
-//
-//	@Override
-//	public void keyTyped(KeyEvent arg0) {}
 
     private static void graphicRunning(Graphics g) {
         //player	//posX, posY, width, height
@@ -225,7 +214,7 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.setColor(Color.WHITE);
         g.drawString("Score: ", 500, 560);
-        g.drawString(""+score, 700, 560);
+        g.drawString(""+ timeCounter , 700, 560);
         g.drawString("Lives: ", 40, 560);
 
 
@@ -257,17 +246,18 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
         //draw aliens
         for (int i=0; i<UtilityClass.aliens.length; i++) {
-            if (UtilityClass.aliens[i] != null) {
+            if (!UtilityClass.aliens[i].isDead()) {
                 g.drawImage(VisualUtil.alien, UtilityClass.aliens[i].getX(), UtilityClass.aliens[i].getY(),
                         VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
             }
         }
 
-        //draw red ship
+        //draw strong aliens
         for (int i=0; i< UtilityClass.sAliens.length; i++) {
-            if (UtilityClass.sAliens[i] != null)
+            if (!UtilityClass.sAliens[i].isDead()) {
                 g.drawImage(VisualUtil.sAlien, UtilityClass.sAliens[i].getX(), UtilityClass.sAliens[i].getY(),
                         VisualUtil.sAlien.getWidth(), VisualUtil.sAlien.getHeight(), null);
+            }
         }
     }
 

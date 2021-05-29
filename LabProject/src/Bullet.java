@@ -20,7 +20,7 @@ public class Bullet extends GameObject{
 
     @Override
     public Rectangle getBoundingBox() {
-        return null;
+        return new Rectangle(x, y, 2, 10);
     }
 
     public int getySpeed() {
