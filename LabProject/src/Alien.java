@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Alien extends GameObject{
-    public static int xSpeed = 5;
+    public int xSpeed = 5;
     private static final int height = 100;
     private static final int widht = 100;
 
@@ -32,7 +32,7 @@ public class Alien extends GameObject{
     }
 
     public void changexSpeed() {
-        xSpeed = -xSpeed;
+        this.xSpeed = -xSpeed;
     }
 
     public int getWidth() {

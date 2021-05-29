@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class StrongAlien extends GameObject{
-    public static int xSpeed = 10;
+    public int xSpeed = 10;
     public int hp = 2;
     private static final int height = 100;
     private static final int width = 100;
@@ -32,7 +32,7 @@ public class StrongAlien extends GameObject{
     }
 
     public void changexSpeed() {
-        xSpeed = -xSpeed;
+        this.xSpeed = -xSpeed;
     }
 
     public void getDamage() {
