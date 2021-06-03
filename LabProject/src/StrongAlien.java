@@ -1,9 +1,8 @@
 import java.awt.*;
 
 public class StrongAlien extends GameObject{
-    public int xSpeed = 10;
+    public int xSpeed = 15;
     public int hp = 2;
-    private static final int height = 100;
     private static final int width = 100;
 
     public StrongAlien(){

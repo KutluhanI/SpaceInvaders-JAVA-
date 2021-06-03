@@ -2,20 +2,19 @@ import java.awt.*;
 
 public class Bullet extends GameObject{
     private int ySpeed;
-    private int xSpeed;
+    private double xSpeed;
+    private double Angle;
 
-    public Bullet (int x, int y, int ySpeed, int xSpeed) {
+    public Bullet (int x, int y, int ySpeed, double xSpeed, double Angle) {
         this.x=x;
         this.y=y;
         this.ySpeed=ySpeed;
         this.xSpeed=xSpeed;
+        this.Angle=Angle;
     }
 
-    public void ymovement() {
-        this.y += ySpeed;
-    }
-    public void xmovement() {
-        this.x += xSpeed;
+    public double getAngle() {
+        return Angle;
     }
 
     @Override
@@ -27,7 +26,7 @@ public class Bullet extends GameObject{
         return ySpeed;
     }
 
-    public int getxSpeed () {
+    public double getxSpeed () {
         return xSpeed;
     }
 }

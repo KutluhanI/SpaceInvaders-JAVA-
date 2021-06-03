@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -17,18 +18,20 @@ public class VisualUtil {
     public static final BufferedImage barricade2 = readImage("barricade2.png");
     public static final BufferedImage barricade3 = readImage("barricade3.png");
     public static final BufferedImage sAlien = readImage("sAlien.png");
-    public static final BufferedImage powerup = readImage("powerup.png");
-    public static final BufferedImage bullet = readImage("bullet.png");
+    public static final Icon powerup = new ImageIcon(path + "powerup.png");
+    public static final Image bullet = readImage("bullet.png");
+    public static final Icon musicI = new ImageIcon(path + "music.png");
+    public static final BufferedImage level1 = readImage("level1.png");
+    public static final BufferedImage level2 = readImage("level2.png");
+    public static final BufferedImage level3 = readImage("level3.png");
 
     private static BufferedImage readImage(String fileName) {
-        System.out.println("[ResourceManager]: Loading "+fileName);
-
+        System.out.println("[VisualUtil]: Loading "+fileName);
         BufferedImage img = null;
-
         try {
             img = ImageIO.read(new File(path + fileName));
         } catch (IOException e) {
-            System.out.println("[ResourceManager]: Exception when loading" +  path + fileName );
+            System.out.println("[VisualUtil]: Exception when loading" +  path + fileName );
         }
         return img;
     }
@@ -40,7 +43,7 @@ public class VisualUtil {
         try {
             reader = new BufferedReader(new FileReader(path + "highscore.txt"));
         } catch (FileNotFoundException e1) {
-            System.out.println("[ResourceManager]: File highscore.txt not found");
+            System.out.println("[VisualUtil]: File highscore.txt not found");
         }
 
         try {
@@ -52,9 +55,12 @@ public class VisualUtil {
                 str = reader.readLine();
             }
         } catch (IOException e) {
-            System.out.println("[ResourceManager]: IOException occurred when reading highscores");
+            System.out.println("[VisualUtil]: IOException occurred when reading highscores");
         }
-
+        try {
+            reader.close();
+        }
+        catch(IOException e) {}
         return array;
     }
 
@@ -62,7 +68,7 @@ public class VisualUtil {
         try {
             writer = new PrintWriter(new File(path + "highscore.txt"));
         } catch (FileNotFoundException e) {
-            System.out.println("[ResourceManager]: File highscore.txt not found");
+            System.out.println("[VisualUtil]: File highscore.txt not found");
         }
 
         for(int i=0; i<UtilityClass.highscores.length; i++) {

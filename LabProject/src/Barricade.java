@@ -15,7 +15,7 @@ public class Barricade extends GameObject {
 
     @Override
     public Rectangle getBoundingBox() {
-        return new Rectangle(x, y, VisualUtil.barricade1.getWidth(), VisualUtil.barricade1.getHeight());
+        return new Rectangle(x, y, VisualUtil.barricade1.getWidth(), 80);
     }
 
     public enum Type {
