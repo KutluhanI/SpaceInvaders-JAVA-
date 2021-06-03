@@ -61,7 +61,7 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
         play = new JButton("[Enter] Start Game");
         this.add(play);
-        play.setBounds(410, 400, 220, 30);
+        play.setBounds(410, 500, 220, 30);
         play.addActionListener(this);
         play.setBorderPainted(false);
         play.setBorder(null);
@@ -72,7 +72,7 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
 
         highscores = new JButton("[Space] Highscores");
         this.add(highscores);
-        highscores.setBounds(410,430,220,30);
+        highscores.setBounds(410,550,220,30);
         highscores.addActionListener(this);
         highscores.setBorderPainted(false);
         highscores.setBorder(null);
@@ -104,14 +104,12 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
         if (level == 1 && state == GameState.RUNNING){
             g.drawImage(VisualUtil.level1,0,0, 1100, 800, null);
         }
-        /*
         else if (level == 2){
             g.drawImage(VisualUtil.level2,0,0,1100,800,null);
         }
-        else if (level == 3){
-            g.drawImage(VisualUtil.level3,0,0,1100,800,null);
+        else if (level == 3) {
+            g.drawImage(VisualUtil.level3, 0, 0, 1100, 800, null);
         }
-         */
         else {
             g.setColor(Color.BLACK);
             g.fillRect(0,0,1100,800);
@@ -404,16 +402,17 @@ public class GameBoard extends JPanel implements KeyListener, ActionListener {
         //title
         g.setColor(Color.WHITE);
         g.setFont(new Font("Algerian", Font.BOLD, 90));
-        g.drawString("CMP2004", 50, 150);
+        g.drawString("CMP2004", 130, 150);
         g.setColor(Color.GREEN);
-        g.drawString("PROJECT", 500, 150);
+        g.drawString("PROJECT", 580, 150);
         g.setColor(Color.WHITE);
 
         //points
-        g.drawImage(VisualUtil.alien, 150, 240, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
-        g.drawImage(VisualUtil.alien, 300, 240, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
-        g.drawImage(VisualUtil.alien, 450, 240, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
-        g.drawImage(VisualUtil.sAlien, 700, 240, VisualUtil.sAlien.getWidth(), VisualUtil.sAlien.getHeight(), null);
+        g.drawImage(VisualUtil.player, 200,300,VisualUtil.player.getWidth(),VisualUtil.alien.getHeight(),null);
+        g.drawImage(VisualUtil.alien, 350, 300, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
+        g.drawImage(VisualUtil.alien, 500, 300, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
+        g.drawImage(VisualUtil.alien, 650, 300, VisualUtil.alien.getWidth(), VisualUtil.alien.getHeight(), null);
+        g.drawImage(VisualUtil.sAlien, 800, 300, VisualUtil.sAlien.getWidth(), VisualUtil.sAlien.getHeight(), null);
 
         g.setFont(new Font("Algerian", Font.PLAIN, 20));
 
